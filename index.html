@@ -21,19 +21,19 @@
 /* Layout: una columna sobria de 1080px; hero con ilustración, secciones separadas por aire y filetes finos; azul marino con un acento bronce. */
 
 /* Tipografía: Object Sans (Pangram Pangram). Si la fuente está instalada en el equipo o sus archivos
-   están en assets/fonts/, se usa esa; si no, el sitio cae en Plus Jakarta Sans, de aspecto muy parecido. */
+   están en fonts/, se usa esa; si no, el sitio cae en Plus Jakarta Sans, de aspecto muy parecido. */
 @font-face {
   font-family: "Object Sans";
   src: local("Object Sans Regular"), local("ObjectSans-Regular"),
-       url("assets/fonts/ObjectSans-Regular.woff2") format("woff2"),
-       url("assets/fonts/ObjectSans-Regular.otf") format("opentype");
+       url("fonts/ObjectSans-Regular.woff2") format("woff2"),
+       url("fonts/ObjectSans-Regular.otf") format("opentype");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Object Sans";
   src: local("Object Sans Heavy"), local("ObjectSans-Heavy"),
-       url("assets/fonts/ObjectSans-Heavy.woff2") format("woff2"),
-       url("assets/fonts/ObjectSans-Heavy.otf") format("opentype");
+       url("fonts/ObjectSans-Heavy.woff2") format("woff2"),
+       url("fonts/ObjectSans-Heavy.otf") format("opentype");
   font-weight: 800; font-style: normal; font-display: swap;
 }
 
@@ -135,7 +135,7 @@ section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--li
 /* ---------- about (sección con foto: siempre oscura) ---------- */
 .photo-bg {
   position: relative; isolation: isolate; border-top: 0;
-  background: #0B111E url("assets/sobre-mi.jpg") center 30% / cover no-repeat;
+  background: #0B111E url("sobre-mi.jpg") center 30% / cover no-repeat;
   color: #E9ECF1;
 }
 .photo-bg::before {
@@ -360,8 +360,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       </div>
       <figure class="scope">
         <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcset="assets/coding-static.png">
-          <img src="assets/coding.gif" width="500" height="500" alt="Animated illustration of a developer coding at a desk with two monitors" data-es-alt="Ilustración animada de un desarrollador programando frente a dos monitores">
+          <source media="(prefers-reduced-motion: reduce)" srcset="coding-static.png">
+          <img src="coding.gif" width="500" height="500" alt="Animated illustration of a developer coding at a desk with two monitors" data-es-alt="Ilustración animada de un desarrollador programando frente a dos monitores">
         </picture>
       </figure>
     </div>
