@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Daniel Germán Ochoa, backend developer in Go and Python focused on production APIs and LLM integration (RAG, MCP). 14 years in the Argentine Navy. Buenos Aires, Argentina.">
+<meta name="theme-color" content="#0D1321">
+<meta name="author" content="Daniel Germán Ochoa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Daniel Germán Ochoa · Backend Developer">
+<meta property="og:description" content="Production APIs in Go and Python, LLM integration with RAG and MCP. Projects with public source code and verifiable certifications.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_AR">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230D1321'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Arial,sans-serif' font-weight='700' font-size='14' fill='%23C8A76B'%3EDO%3C/text%3E%3C/svg%3E">
+<title>Daniel Germán Ochoa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap">
+<style>
+/* Layout: una columna sobria de 1080px; hero con ilustración, secciones separadas por aire y filetes finos; azul marino con un acento bronce. */
+
+/* Tipografía: Object Sans (Pangram Pangram). Si la fuente está instalada en el equipo o sus archivos
+   están en assets/fonts/, se usa esa; si no, el sitio cae en Plus Jakarta Sans, de aspecto muy parecido. */
+@font-face {
+  font-family: "Object Sans";
+  src: local("Object Sans Regular"), local("ObjectSans-Regular"),
+       url("assets/fonts/ObjectSans-Regular.woff2") format("woff2"),
+       url("assets/fonts/ObjectSans-Regular.otf") format("opentype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Object Sans";
+  src: local("Object Sans Heavy"), local("ObjectSans-Heavy"),
+       url("assets/fonts/ObjectSans-Heavy.woff2") format("woff2"),
+       url("assets/fonts/ObjectSans-Heavy.otf") format("opentype");
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+
+/* Diseño oscuro fijo: un solo tono de azul marino oscuro con acento bronce, igual en cualquier dispositivo. */
+:root {
+  --bg: #0D1321;
+  --surface: #0D1321;
+  --ink: #E6E9EF;
+  --muted: #9AA4B6;
+  --line: #243048;
+  --accent: #C8A76B;
+  --plate: #D9DEE7;
+  --sans: "Object Sans", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+html { background: var(--bg); }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: 1080px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+
+/* ---------- nav ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 28px; min-height: 60px; }
+.brand { font-size: 1.1rem; text-decoration: none; white-space: nowrap; margin-right: auto; }
+.nav ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; overflow-x: auto; scrollbar-width: none; }
+.nav ul::-webkit-scrollbar { display: none; }
+.nav a.link { font-size: 0.875rem; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .2s; }
+.nav a.link:hover { color: var(--ink); }
+.lang { display: flex; flex: none; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.lang button {
+  font: 600 0.75rem/1 var(--sans); letter-spacing: 0.06em; color: var(--muted);
+  background: transparent; border: 0; padding: 8px 11px; cursor: pointer; transition: color .2s, background .2s;
+}
+.lang button:hover { color: var(--ink); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+@media (max-width: 720px) {
+  .nav .wrap { flex-wrap: wrap; gap: 8px 16px; padding-block: 10px; }
+  .nav ul { order: 3; width: 100%; gap: 20px; }
+}
+
+/* ---------- type ---------- */
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0; }
+h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.05; }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.4rem); line-height: 1.15; }
+h3 { font-size: 1.45rem; line-height: 1.25; }
+p { margin: 0; }
+.lead { font-size: 1.125rem; color: var(--muted); max-width: 58ch; }
+
+/* ---------- sections ---------- */
+section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--line); scroll-margin-top: 64px; }
+.sec-head { display: grid; gap: 10px; margin-bottom: clamp(32px, 5vw, 56px); }
+
+/* ---------- hero ---------- */
+.hero { border-top: 0; padding-block: clamp(24px, 4vw, 48px) clamp(56px, 9vw, 104px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 72px); align-items: center; }
+.hero-text { display: grid; gap: 24px; min-width: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 500 0.9375rem/1 var(--sans); text-decoration: none;
+  padding: 13px 20px; border-radius: 2px; border: 1px solid var(--line);
+  background: transparent; color: var(--ink);
+  transition: border-color .2s;
+}
+.btn:hover { border-color: var(--ink); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.8125rem; color: var(--muted); }
+.hero-meta span::before { content: "— "; color: var(--accent); }
+.scope { margin: 0; display: grid; place-items: center; }
+.scope picture {
+  display: block; width: min(400px, 100%); aspect-ratio: 1; max-width: 100%;
+  border-radius: 50%; background: var(--plate);
+}
+.scope img { display: block; width: 100%; height: auto; }
+@media (max-width: 820px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+  .scope picture { width: min(300px, 80%); }
+}
+
+/* ---------- about (sección con foto: siempre oscura) ---------- */
+.photo-bg {
+  position: relative; isolation: isolate; border-top: 0;
+  background: #0B111E url("assets/sobre-mi.jpg") center 30% / cover no-repeat;
+  color: #E9ECF1;
+}
+.photo-bg::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(11, 17, 30, 0.86) 0%, rgba(11, 17, 30, 0.78) 45%, rgba(11, 17, 30, 0.88) 100%);
+}
+.photo-bg .eyebrow { color: #D6B97F; }
+.photo-bg .about-text { color: #E9ECF1; }
+.photo-bg .facts { border-color: rgba(233, 236, 241, 0.22); }
+.photo-bg .facts dt { color: #B3BBC8; }
+
+/* Entrada de la sección: primero se ve la foto, después se oscurece y aparece el texto.
+   Solo se activa con JavaScript; sin JS o con "reducir movimiento" el texto se ve directo. */
+.photo-bg.js-reveal::before { opacity: 0.12; transition: opacity 0.9s ease; }
+.photo-bg.js-reveal .reveal {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 1s ease, transform 1s cubic-bezier(.2, .7, .2, 1);
+}
+.photo-bg.js-reveal.revealed::before { opacity: 1; }
+.photo-bg.js-reveal.revealed .reveal {
+  opacity: 1; transform: none;
+  transition-delay: calc(0.5s + var(--i, 0) * 0.12s);
+}
+
+.about { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 72px); }
+.about-text { display: grid; gap: 18px; max-width: 62ch; min-width: 0; }
+.about-text strong { font-weight: 800; }
+.facts { margin: 0; display: grid; gap: 18px; align-content: start; padding-left: 24px; border-left: 1px solid var(--line); }
+.facts div { display: grid; gap: 2px; }
+.facts dt { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0; }
+@media (max-width: 820px) {
+  .about { grid-template-columns: minmax(0, 1fr); }
+  .facts { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: 24px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+}
+
+/* ---------- projects ---------- */
+.projects { display: grid; }
+.project {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px clamp(24px, 5vw, 64px);
+  padding-block: 36px; border-top: 1px solid var(--line);
+}
+.project:first-child { border-top: 0; padding-top: 0; }
+.project-head { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.project-kind { color: var(--muted); font-size: 0.9375rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip { font-size: 0.75rem; color: var(--ink); padding: 3px 8px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); }
+.project-body { display: grid; gap: 14px; min-width: 0; }
+.project-body ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.project-body li { padding-left: 18px; position: relative; color: var(--muted); }
+.project-body li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 1px; background: var(--accent); }
+.repo {
+  display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+  font-size: 0.8125rem; color: var(--accent); text-decoration: none;
+  border-bottom: 1px solid transparent; transition: border-color .2s;
+}
+.repo:hover { border-color: var(--accent); }
+.repo svg { width: 14px; height: 14px; flex: none; }
+.minor-title { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 48px 0 16px; }
+.minor { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.minor article { background: var(--surface); border: 1px solid var(--line); padding: 22px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.minor h4 { font-weight: 400; font-size: 1.15rem; margin: 0; }
+.minor p { color: var(--muted); font-size: 0.9375rem; }
+.minor .stack { font-size: 0.75rem; color: var(--ink); }
+@media (max-width: 820px) { .project { grid-template-columns: minmax(0, 1fr); } }
+
+/* Logo de GitHub como marca de agua de fondo en Proyectos */
+#proyectos { position: relative; isolation: isolate; overflow: hidden; }
+.gh-mark {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: clamp(32px, 6vw, 72px);
+  right: max(24px, calc(50% - 600px));
+  width: min(380px, 60vw); height: auto;
+  color: var(--accent); opacity: 0.06;
+}
+@media (max-width: 820px) { .gh-mark { top: 24px; right: 16px; width: min(380px, 55vw); opacity: 0.05; } }
+
+/* ---------- skills ---------- */
+.skills { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0 clamp(24px, 5vw, 64px); }
+.skills div { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.skills dt { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.skills dd { margin: 0; }
+@media (max-width: 420px) { .skills div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+
+/* Persona frente al pizarrón como marca de agua de fondo en Competencias */
+#competencias { position: relative; isolation: isolate; overflow: hidden; }
+.skills-mark {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: clamp(32px, 6vw, 72px);
+  right: max(24px, calc(50% - 600px));
+  width: min(500px, 80vw); height: auto;
+  color: var(--accent); opacity: 0.09;
+}
+@media (max-width: 820px) { .skills-mark { top: 24px; right: 16px; width: min(500px, 70vw); opacity: 0.07; } }
+
+/* ---------- timeline ---------- */
+.timeline { display: grid; }
+.entry { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 12px clamp(24px, 5vw, 64px); padding-block: 32px; border-top: 1px solid var(--line); }
+.entry:first-child { border-top: 0; padding-top: 0; }
+.when { font-size: 0.875rem; color: var(--accent); font-variant-numeric: tabular-nums; padding-top: 4px; }
+.entry-body { display: grid; gap: 12px; min-width: 0; }
+.entry-body .org { color: var(--muted); }
+.entry-body ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-width: 70ch; }
+.entry-body li { padding-left: 18px; position: relative; color: var(--muted); }
+.entry-body li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 1px; background: var(--accent); }
+@media (max-width: 640px) { .entry { grid-template-columns: minmax(0, 1fr); } }
+
+/* Edificio institucional como marca de agua de fondo en Trayectoria */
+#trayectoria { position: relative; isolation: isolate; overflow: hidden; }
+.exp-mark {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: clamp(32px, 6vw, 72px);
+  right: max(24px, calc(50% - 600px));
+  width: min(500px, 80vw); height: auto;
+  color: var(--accent); opacity: 0.09;
+}
+@media (max-width: 820px) { .exp-mark { top: 24px; right: 16px; width: min(500px, 70vw); opacity: 0.07; } }
+
+/* ---------- certifications ---------- */
+.cert-groups { display: grid; gap: 40px; }
+.cert-group h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.cert-group .issuer { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em; }
+.certs { list-style: none; margin: 16px 0 0; padding: 0; }
+.certs li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: baseline; gap: 8px 24px;
+  padding-block: 14px; border-top: 1px solid var(--line);
+}
+.certs li:last-child { border-bottom: 1px solid var(--line); }
+.certs .date { font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.certs .verify { font-size: 0.8125rem; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.certs .verify:hover { text-decoration: underline; text-underline-offset: 3px; }
+.certs .code { font-size: 0.8125rem; color: var(--muted); white-space: nowrap; }
+@media (max-width: 560px) {
+  .certs li { grid-template-columns: minmax(0, 1fr) auto; }
+  .certs li > :first-child { grid-column: 1 / -1; }
+}
+
+/* Sello de certificación como marca de agua de fondo */
+#certificaciones { position: relative; isolation: isolate; overflow: hidden; }
+.cert-seal {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: clamp(40px, 6vw, 80px); right: max(-90px, calc(50% - 600px));
+  width: min(500px, 70vw); height: auto;
+  color: var(--accent); opacity: 0.09;
+  font-family: var(--sans);
+}
+@media (max-width: 640px) { .cert-seal { right: -60px; opacity: 0.06; } }
+
+/* ---------- contact ---------- */
+.contact { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 72px); align-items: start; }
+.contact-text { display: grid; gap: 18px; min-width: 0; }
+.channels { display: grid; gap: 0; }
+.channel { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 16px; border-top: 1px solid var(--line); min-width: 0; }
+.channel:first-child { border-top: 0; padding-top: 0; }
+.channel:last-child { border-bottom: 1px solid var(--line); }
+.channel .label { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.channel a { font-size: 0.9375rem; text-decoration: none; overflow-wrap: anywhere; }
+.channel a:hover { color: var(--accent); }
+.channel-main { display: grid; gap: 2px; min-width: 0; }
+.copy {
+  font: 500 0.75rem/1 var(--sans); color: var(--ink); background: transparent; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; flex: none; transition: border-color .2s;
+}
+.copy:hover { border-color: var(--ink); }
+@media (max-width: 820px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+
+/* Sobre con avión de papel como marca de agua de fondo en Contacto */
+#contacto { position: relative; isolation: isolate; overflow: hidden; }
+.contact-mark {
+  position: absolute; z-index: -1; pointer-events: none;
+  top: 50%; transform: translateY(-50%);
+  left: max(-70px, calc(50% - 640px));
+  width: min(440px, 75vw); height: auto;
+  color: var(--accent); opacity: 0.09;
+}
+@media (max-width: 820px) { .contact-mark { top: 0; transform: none; left: auto; right: -60px; opacity: 0.07; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#inicio" data-es="Mi Portfolio">My Portfolio</a>
+    <ul>
+      <li><a class="link" href="#sobre-mi" data-es="Sobre mí">About</a></li>
+      <li><a class="link" href="#proyectos" data-es="Proyectos">Projects</a></li>
+      <li><a class="link" href="#competencias" data-es="Competencias">Skills</a></li>
+      <li><a class="link" href="#trayectoria" data-es="Trayectoria">Experience</a></li>
+      <li><a class="link" href="#certificaciones" data-es="Certificaciones">Certifications</a></li>
+      <li><a class="link" href="#contacto" data-es="Contacto">Contact</a></li>
+    </ul>
+    <div class="lang" role="group" aria-label="Language / Idioma">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-es" data-lang="es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <header class="hero" id="inicio">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow" data-es="Desarrollador Backend · Go · Python · IA aplicada">Backend Developer · Go · Python · Applied AI</p>
+        <h1>Daniel Germán Ochoa</h1>
+        <p class="lead" data-es="Construyo APIs de producción en Go y Python, e integro modelos de lenguaje con RAG y MCP. Antes pasé 14&nbsp;años en la Armada Argentina manteniendo radares de navegación en condiciones de misión crítica.">I build production APIs in Go and Python and integrate language models with RAG and MCP. Before that, I spent 14&nbsp;years in the Argentine Navy maintaining navigation radar systems under mission-critical conditions.</p>
+        <div class="actions">
+          <a class="btn" href="https://github.com/DanielP41" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+            GitHub
+          </a>
+          <a class="btn" href="https://www.linkedin.com/in/daniel-ochoa-p41" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+            LinkedIn
+          </a>
+          <a class="btn" href="mailto:daniell.german8@gmail.com?subject=Portfolio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5"/><path d="m3 6 9 7 9-7"/></svg>
+            Email
+          </a>
+        </div>
+      </div>
+      <figure class="scope">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcset="assets/coding-static.png">
+          <img src="assets/coding.gif" width="500" height="500" alt="Animated illustration of a developer coding at a desk with two monitors" data-es-alt="Ilustración animada de un desarrollador programando frente a dos monitores">
+        </picture>
+      </figure>
+    </div>
+  </header>
+
+  <section id="sobre-mi" class="photo-bg">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow reveal" style="--i:0" data-es="Sobre mí">About me</p>
+        <h2 class="reveal" style="--i:1" data-es="De los radares de navegación al backend">From navigation radar to backend</h2>
+      </div>
+      <div class="about">
+        <div class="about-text">
+          <p class="reveal" style="--i:2" data-es="Soy desarrollador backend y trabajo principalmente con <strong>Go (Fiber)</strong> y <strong>Python (FastAPI)</strong> sobre PostgreSQL, MongoDB y Redis, con Docker y CI/CD en GitHub Actions. Construí seis sistemas propios aplicando arquitectura limpia, colas asíncronas con reintentos, autenticación JWT/RBAC y testing automatizado.">I'm a backend developer working mainly with <strong>Go (Fiber)</strong> and <strong>Python (FastAPI)</strong> on PostgreSQL, MongoDB and Redis, with Docker and CI/CD on GitHub Actions. I've built six systems of my own applying clean architecture, asynchronous queues with retries, JWT/RBAC authentication and automated testing.</p>
+          <p class="reveal" style="--i:3" data-es="Mi foco actual son las APIs de producción y la integración de modelos de lenguaje: RAG, servidores MCP y orquestación de varios proveedores de LLM.">My current focus is production APIs and language-model integration: RAG, MCP servers and orchestration across multiple LLM providers.</p>
+          <p class="reveal" style="--i:4" data-es="Pasé <strong>14 años en la Armada Argentina</strong> manteniendo y reparando sistemas de radar de navegación, y terminé como Encargado de Reparaciones Electrónicas al frente de un equipo técnico. De ahí traigo el diagnóstico sistemático bajo presión, el trabajo por guardias, la documentación rigurosa y la cultura de cero fallas. Lo que más me interesaba de esos sistemas era la lógica con la que procesan la información, y en 2022 empecé a dedicarme al software.">I spent <strong>14 years with the Argentine Navy</strong> maintaining and repairing navigation radar systems, finishing as Electronic Repairs Supervisor leading a technical team. From there I bring systematic troubleshooting under pressure, on-call discipline, rigorous documentation and a zero-failure mindset. What interested me most about those systems was the logic behind how they process information, and in 2022 I turned to software.</p>
+        </div>
+        <dl class="facts reveal" style="--i:5">
+          <div><dt data-es="Ubicación">Location</dt><dd data-es="Ciudad Autónoma de Buenos Aires, Argentina">Autonomous City of Buenos Aires, Argentina</dd></div>
+          <div><dt data-es="Idiomas">Languages</dt><dd data-es="Español nativo · Inglés B2 acreditado">Spanish (native) · English B2, certified</dd></div>
+          <div><dt data-es="Modalidad">Work mode</dt><dd data-es="Remota, híbrida o presencial en CABA">Remote, hybrid or on-site in Buenos Aires</dd></div>
+          <div><dt data-es="Disponibilidad">Availability</dt><dd data-es="Inmediata">Immediate</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos">
+    <svg class="gh-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-es="Proyectos">Projects</p>
+        <h2 data-es="Sistemas que diseñé, construí y desplegué">Systems I designed, built and shipped</h2>
+        <p class="lead" data-es="Todos tienen el código público en GitHub.">All of them have public source code on GitHub.</p>
+      </div>
+
+      <div class="projects">
+        <article class="project">
+          <div class="project-head">
+            <h3>Engine API Workflow</h3>
+            <p class="project-kind" data-es="Motor de automatización de flujos">Workflow automation engine</p>
+            <div class="chips"><span class="chip">Go · Fiber</span><span class="chip">MongoDB</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">GitHub Actions</span></div>
+          </div>
+          <div class="project-body">
+            <p data-es="API de automatización con pipelines de múltiples pasos y disparadores programados.">Automation API with multi-step pipelines and scheduled triggers.</p>
+            <ul>
+              <li data-es="Endpoints protegidos con JWT, RBAC, refresh tokens y límite de peticiones por usuario.">Endpoints secured with JWT, RBAC, refresh tokens and per-user rate limiting.</li>
+              <li data-es="Procesamiento asíncrono de trabajos sobre colas Redis, con política de reintentos.">Asynchronous job processing over Redis queues, including a retry policy.</li>
+              <li data-es="Auditoría de operaciones, métricas, estadísticas en tiempo real y health checks.">Audit logging, metrics, real-time statistics and health checks.</li>
+              <li data-es="Arquitectura limpia en capas: handlers, servicios, repositorios y modelos.">Clean layered architecture: handlers, services, repositories and models.</li>
+            </ul>
+            <a class="repo" href="https://github.com/DanielP41/Engine_API_Workflow" target="_blank" rel="noopener"><span data-es="Ver código en GitHub">View code on GitHub</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-head">
+            <h3>RAG Document API</h3>
+            <p class="project-kind" data-es="Búsqueda documental asistida por LLM">LLM-assisted document search</p>
+            <div class="chips"><span class="chip">Python · FastAPI</span><span class="chip">LangChain</span><span class="chip">ChromaDB</span><span class="chip">Docker</span><span class="chip">PyTest</span></div>
+          </div>
+          <div class="project-body">
+            <p data-es="API RAG multi-proveedor compatible con OpenAI, Anthropic, DeepSeek y Ollama.">Multi-provider RAG API supporting OpenAI, Anthropic, DeepSeek and Ollama.</p>
+            <ul>
+              <li data-es="Ingesta asíncrona de documentos en PDF, TXT, Markdown, EPUB y Excel.">Asynchronous ingestion of PDF, TXT, Markdown, EPUB and Excel documents.</li>
+              <li data-es="Embeddings de HuggingFace ejecutados en local: sin costo por token y con los datos puertas adentro.">HuggingFace embeddings running locally: zero per-token cost and data kept in-house.</li>
+              <li data-es="Panel en tiempo real con carga por arrastre y chat sobre los documentos indexados.">Real-time dashboard with drag-and-drop upload and chat over indexed documents.</li>
+              <li data-es="Cobertura con PyTest de todos los endpoints y de la lógica de validación.">PyTest coverage across all endpoints and validation logic.</li>
+            </ul>
+            <a class="repo" href="https://github.com/DanielP41/API-RGA" target="_blank" rel="noopener"><span data-es="Ver código en GitHub">View code on GitHub</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-head">
+            <h3>Dev Environment Snapshots</h3>
+            <p class="project-kind" data-es="Servidor MCP">MCP server</p>
+            <div class="chips"><span class="chip">Go</span><span class="chip">SQLite</span><span class="chip">Win32 API</span><span class="chip">MCP</span></div>
+          </div>
+          <div class="project-body">
+            <p data-es="Servidor MCP para capturar, restaurar y comparar estados de un entorno de desarrollo.">MCP server to capture, restore and diff development environment states.</p>
+            <ul>
+              <li data-es="Integración nativa con la Win32 API sin CGO para la gestión de ventanas.">Native Win32 API integration without CGO for window management.</li>
+              <li data-es="Persistencia de los snapshots en SQLite.">Snapshot persistence in SQLite.</li>
+            </ul>
+            <a class="repo" href="https://github.com/DanielP41/Snapshots-MCP-Server" target="_blank" rel="noopener"><span data-es="Ver código en GitHub">View code on GitHub</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-head">
+            <h3>Residence Eclat</h3>
+            <p class="project-kind" data-es="Gestión de alquiler de habitaciones">Room rental management</p>
+            <div class="chips"><span class="chip">Node.js</span><span class="chip">TypeScript</span><span class="chip">Express</span><span class="chip">Prisma</span><span class="chip">PostgreSQL</span></div>
+          </div>
+          <div class="project-body">
+            <p data-es="Sistema de alquiler con vistas de disponibilidad y panel de administración.">Rental system with availability views and an administration panel.</p>
+            <ul>
+              <li data-es="Backend REST en Express y TypeScript sobre Prisma ORM.">REST backend in Express and TypeScript on top of Prisma ORM.</li>
+              <li data-es="Acceso protegido con JWT, validación de entrada con Zod y middleware en capas.">Access secured with JWT, input validation with Zod and layered middleware.</li>
+              <li data-es="Organización en controladores, servicios, middleware y rutas.">Organised into controllers, services, middleware and routes.</li>
+            </ul>
+            <a class="repo" href="https://github.com/DanielP41/ResidenceEclat" target="_blank" rel="noopener"><span data-es="Ver código en GitHub">View code on GitHub</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          </div>
+        </article>
+      </div>
+
+      <p class="minor-title" data-es="Otros proyectos">Other projects</p>
+      <div class="minor">
+        <article>
+          <h4>Moto-Repuestos</h4>
+          <p data-es="Esquema relacional de inventario, ventas, garantías y clientes, con 5 triggers, 4 vistas y 13 índices para reporting y optimización de consultas.">Relational schema for inventory, sales, warranties and clients, with 5 triggers, 4 views and 13 indexes for reporting and query optimisation.</p>
+          <span class="stack">PostgreSQL 16 · Docker</span>
+          <a class="repo" href="https://github.com/DanielP41/motorespuestos" target="_blank" rel="noopener"><span data-es="Ver código">View code</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        </article>
+        <article>
+          <h4>REST API Task Manager</h4>
+          <p data-es="API REST modular con layout idiomático de Go y pipeline de CI/CD para testing y despliegue.">Modular REST API with idiomatic Go layout and a CI/CD pipeline for testing and deployment.</p>
+          <span class="stack">Go · PostgreSQL · sqlx · GitHub Actions</span>
+          <a class="repo" href="https://github.com/DanielP41/API-REST-Golang" target="_blank" rel="noopener"><span data-es="Ver código">View code</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="competencias">
+    <svg class="skills-mark" viewBox="0 0 480 420" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="16" y="16" width="448" height="306" rx="4"/>
+      <path d="M 70 70 L 150 50 M 70 70 L 120 130 M 150 50 L 220 90 M 120 130 L 220 90 M 120 130 L 60 185 M 120 130 L 185 190"/>
+      <circle cx="70" cy="70" r="8" style="fill: var(--bg)"/><circle cx="150" cy="50" r="8" style="fill: var(--bg)"/><circle cx="120" cy="130" r="8" style="fill: var(--bg)"/><circle cx="220" cy="90" r="8" style="fill: var(--bg)"/><circle cx="60" cy="185" r="8" style="fill: var(--bg)"/><circle cx="185" cy="190" r="8" style="fill: var(--bg)"/>
+      <rect x="296" y="40" width="38" height="34" rx="2"/><rect x="350" y="58" width="38" height="34" rx="2"/><rect x="406" y="38" width="38" height="34" rx="2"/><rect x="396" y="118" width="38" height="34" rx="2"/><rect x="336" y="112" width="38" height="34" rx="2"/>
+      <path d="M 36 238 H 92 M 36 260 H 116 M 36 282 H 78"/>
+      <path d="M 360 216 L 384 192 L 404 204 L 436 168"/>
+      <path d="M 238 420 C 240 382, 242 354, 260 338 L 287 308 L 313 308 L 340 338 C 358 354, 360 382, 362 420" style="fill: var(--bg)"/>
+      <path d="M 287 308 L 300 320 L 313 308 M 300 320 V 420"/>
+      <path d="M 262 344 L 226 376 L 218 288" stroke-width="27"/>
+      <path d="M 262 344 L 226 376 L 218 288" stroke-width="17" style="stroke: var(--bg)"/>
+      <path d="M 217 274 L 215 242" stroke-width="14"/>
+      <path d="M 217 274 L 215 242" stroke-width="4" style="stroke: var(--bg)"/>
+      <circle cx="218" cy="282" r="12" style="fill: var(--bg)"/>
+      <circle cx="300" cy="270" r="30" style="fill: var(--bg)"/>
+      <path d="M 272 264 q 2 -14 14 -12 q 4 -14 16 -8 q 7 -10 17 -2 q 12 -2 12 12"/>
+      <path d="M 276 256 q 5 -5 10 -2 M 295 248 q 5 -4 8 2 M 311 250 q 5 -2 6 5"/>
+    </svg>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-es="Competencias">Skills</p>
+        <h2 data-es="Con qué trabajo">What I work with</h2>
+      </div>
+      <dl class="skills">
+        <div><dt data-es="Lenguajes">Languages</dt><dd data-es="Go (principal), Python, TypeScript, JavaScript">Go (primary), Python, TypeScript, JavaScript</dd></div>
+        <div><dt>Frameworks</dt><dd>Fiber, FastAPI, Flask, Express.js</dd></div>
+        <div><dt data-es="IA aplicada">Applied AI</dt><dd data-es="LangChain, LlamaIndex, RAG, ChromaDB, orquestación de LLM, MCP, embeddings, agentes, n8n">LangChain, LlamaIndex, RAG, ChromaDB, LLM orchestration, MCP, embeddings, agents, n8n</dd></div>
+        <div><dt data-es="Bases de datos">Databases</dt><dd data-es="PostgreSQL, MongoDB, Redis, SQLite, bases vectoriales">PostgreSQL, MongoDB, Redis, SQLite, vector databases</dd></div>
+        <div><dt data-es="ORM y datos">ORM &amp; data</dt><dd>Prisma, SQLAlchemy, sqlx</dd></div>
+        <div><dt>DevOps</dt><dd>Docker, Docker Compose, GitHub Actions (CI/CD), Linux</dd></div>
+        <div><dt data-es="Arquitectura">Architecture</dt><dd data-es="Clean Architecture, APIs REST, JWT/RBAC, procesamiento asíncrono, colas de mensajes">Clean Architecture, REST APIs, JWT/RBAC, async processing, message queues</dd></div>
+        <div><dt>Testing</dt><dd data-es="PyTest, pruebas de endpoints y de lógica de validación">PyTest, endpoint and validation-logic tests</dd></div>
+        <div><dt data-es="Herramientas">Tools</dt><dd>Git/GitHub, VS Code, Jira, Trello, Confluence, Notion</dd></div>
+        <div><dt data-es="Metodologías">Methodologies</dt><dd>Agile (Scrum / Kanban)</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="trayectoria">
+    <svg class="exp-mark" viewBox="0 0 460 400" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22,152 46,122 152,122 152,152" style="fill: var(--bg)"/>
+      <polygon points="438,152 414,122 308,122 308,152" style="fill: var(--bg)"/>
+      <rect x="38" y="152" width="114" height="208" style="fill: var(--bg)"/>
+      <rect x="308" y="152" width="114" height="208" style="fill: var(--bg)"/>
+      <polygon points="138,92 230,38 322,92" style="fill: var(--bg)"/>
+      <circle cx="230" cy="70" r="10"/>
+      <rect x="138" y="92" width="184" height="12" style="fill: var(--bg)"/>
+      <rect x="150" y="104" width="160" height="256" style="fill: var(--bg)"/>
+      <path d="M 170 190 V 139.0 A 11.0 11.0 0 0 1 192 139.0 V 190 Z M 170 270 V 219.0 A 11.0 11.0 0 0 1 192 219.0 V 270 Z M 203 190 V 139.0 A 11.0 11.0 0 0 1 225 139.0 V 190 Z M 203 270 V 219.0 A 11.0 11.0 0 0 1 225 219.0 V 270 Z M 236 190 V 139.0 A 11.0 11.0 0 0 1 258 139.0 V 190 Z M 236 270 V 219.0 A 11.0 11.0 0 0 1 258 219.0 V 270 Z M 269 190 V 139.0 A 11.0 11.0 0 0 1 291 139.0 V 190 Z M 269 270 V 219.0 A 11.0 11.0 0 0 1 291 219.0 V 270 Z M 58 234 V 188.0 A 12.0 12.0 0 0 1 82 188.0 V 234 Z M 58 314 V 268.0 A 12.0 12.0 0 0 1 82 268.0 V 314 Z M 102 234 V 188.0 A 12.0 12.0 0 0 1 126 188.0 V 234 Z M 102 314 V 268.0 A 12.0 12.0 0 0 1 126 268.0 V 314 Z M 332 234 V 188.0 A 12.0 12.0 0 0 1 356 188.0 V 234 Z M 332 314 V 268.0 A 12.0 12.0 0 0 1 356 268.0 V 314 Z M 376 234 V 188.0 A 12.0 12.0 0 0 1 400 188.0 V 234 Z M 376 314 V 268.0 A 12.0 12.0 0 0 1 400 268.0 V 314 Z"/>
+      <path d="M 212 360 V 318.0 A 18.0 18.0 0 0 1 248 318.0 V 360 Z" style="fill: var(--bg)"/>
+      <rect x="16" y="360" width="428" height="18" rx="2" style="fill: var(--bg)"/>
+    </svg>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-es="Trayectoria">Experience</p>
+        <h2 data-es="Experiencia y formación">Experience and education</h2>
+      </div>
+      <div class="timeline">
+        <article class="entry">
+          <p class="when" data-es="2022 — hoy">2022 — present</p>
+          <div class="entry-body">
+            <h3 data-es="Desarrollador Backend">Backend Developer</h3>
+            <p class="org" data-es="Proyectos independientes · Buenos Aires">Independent projects · Buenos Aires</p>
+            <ul>
+              <li data-es="Diseño, desarrollo, testing y despliegue de sistemas backend propios, con código público en GitHub.">Design, development, testing and deployment of my own backend systems, with public source code on GitHub.</li>
+              <li data-es="Formación autodidacta continua en desarrollo backend, arquitectura de software e IA aplicada.">Continuous self-directed training in backend development, software architecture and applied AI.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when">2011 — 2025</p>
+          <div class="entry-body">
+            <h3 data-es="Encargado de Reparaciones Electrónicas">Electronic Repairs Supervisor</h3>
+            <p class="org" data-es="Armada Argentina · Sistemas de Radar de Navegación">Argentine Navy · Navigation Radar Systems</p>
+            <ul>
+              <li data-es="Conducción de un equipo técnico responsable de la reparación de radares de navegación de misión crítica, con plazos acotados y operación embarcada.">Led a technical team repairing mission-critical navigation radar under tight deadlines and at sea.</li>
+              <li data-es="A cargo de equipos de comunicaciones, sonar, radar e informática.">Responsible for communications, sonar, radar and IT equipment.</li>
+              <li data-es="Reducción del tiempo fuera de servicio mediante diagnóstico sistemático de fallas y mantenimiento preventivo programado.">Reduced equipment downtime through systematic fault diagnosis and scheduled preventive maintenance.</li>
+              <li data-es="Operación sin fallas de los equipos de navegación a lo largo de las campañas.">Delivered zero-failure operation of navigation equipment across deployments.</li>
+              <li data-es="Documentación técnica de procedimientos, registro de intervenciones y trazabilidad de fallas.">Produced technical procedure documentation, intervention records and fault traceability.</li>
+              <li data-es="Cuatro ascensos, desde Auxiliar de Radar hasta Encargado de Reparaciones Electrónicas.">Promoted four times, from Radar Assistant to Electronic Repairs Supervisor.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when" data-es="Formación">Education</p>
+          <div class="entry-body">
+            <h3 data-es="Técnico Superior Electrónico">Senior Electronic Technician</h3>
+            <p class="org" data-es="Escuela de Suboficiales de la Armada · Especialización en radar de navegación">Argentine Navy Petty Officers School · Specialised in navigation radar</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="certificaciones">
+    <svg class="cert-seal" viewBox="0 0 400 450" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="seal-ribbon-mask"><rect width="400" height="450" fill="#fff"/><circle cx="200" cy="190" r="174" fill="#000"/></mask>
+        <path id="seal-top" d="M 88,190 A 112 112 0 0 1 312,190"/>
+        <path id="seal-bottom" d="M 64,190 A 136 136 0 0 0 336,190"/>
+      </defs>
+      <g mask="url(#seal-ribbon-mask)" fill="currentColor">
+        <polygon points="118,280 70,420 118,400 146,446 186,330"/>
+        <polygon points="282,280 330,420 282,400 254,446 214,330"/>
+      </g>
+      <circle cx="200" cy="190" r="168" fill="none" stroke="currentColor" stroke-width="8"/>
+      <circle cx="200" cy="190" r="150" fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="200" cy="190" r="92" fill="currentColor"/>
+      <circle cx="200" cy="190" r="100" fill="none" stroke="currentColor" stroke-width="2"/>
+      <g fill="currentColor"><polygon points="86.0,136.9 87.7,141.5 92.6,141.8 88.8,144.8 90.1,149.6 86.0,146.9 81.8,149.6 83.2,144.8 79.3,141.8 84.2,141.5"/><polygon points="77.0,181.0 79.2,186.9 85.6,187.2 80.6,191.2 82.3,197.3 77.0,193.8 71.7,197.3 73.4,191.2 68.4,187.2 74.8,186.9"/><polygon points="86.0,229.1 87.7,233.7 92.6,233.9 88.8,237.0 90.1,241.7 86.0,239.0 81.8,241.7 83.2,237.0 79.3,233.9 84.2,233.7"/><polygon points="314.0,136.9 315.8,141.5 320.7,141.8 316.8,144.8 318.2,149.6 314.0,146.9 309.9,149.6 311.2,144.8 307.4,141.8 312.3,141.5"/><polygon points="323.0,181.0 325.2,186.9 331.6,187.2 326.6,191.2 328.3,197.3 323.0,193.8 317.7,197.3 319.4,191.2 314.4,187.2 320.8,186.9"/><polygon points="314.0,229.1 315.8,233.7 320.7,233.9 316.8,237.0 318.2,241.7 314.0,239.0 309.9,241.7 311.2,237.0 307.4,233.9 312.3,233.7"/></g>
+      <text fill="currentColor" font-size="25" font-weight="600" letter-spacing="7"><textPath href="#seal-top" startOffset="50%" text-anchor="middle">GUARANTEE</textPath></text>
+      <text fill="currentColor" font-size="25" font-weight="600" letter-spacing="7"><textPath href="#seal-bottom" startOffset="50%" text-anchor="middle">CERTIFIED</textPath></text>
+    </svg>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-es="Certificaciones">Certifications</p>
+        <h2 data-es="Verificables con un clic">Verifiable in one click</h2>
+        <p class="lead" data-es="Obtenidas entre enero y agosto de 2026. Cada enlace abre la credencial en el sitio del emisor.">Earned between January and August 2026. Each link opens the credential on the issuer's website.</p>
+      </div>
+      <div class="cert-groups">
+        <div class="cert-group">
+          <h3 data-es="IA aplicada y desarrollo con LLM">Applied AI and LLM development</h3>
+          <p class="issuer">Anthropic</p>
+          <ul class="certs">
+            <li><span>Model Context Protocol: Advanced Topics</span><span class="date">08/2026</span><a class="verify" href="https://verify.skilljar.com/c/f27292274wqd" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Building with the Claude API</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/ehmgx44pa4x2" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Claude Code in Action</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/pvzdhuwne8z3" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Introduction to Agent Skills</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/ogxp8ogas8i9" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Introduction to Subagents</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/p3wcv3cs2kj4" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Claude Code 101</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/hxdk6pmgh6vw" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>AI Fluency: Framework &amp; Foundations</span><span class="date">05/2026</span><a class="verify" href="https://verify.skilljar.com/c/z4jir2c849k6" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+          </ul>
+        </div>
+        <div class="cert-group">
+          <h3 data-es="Automatización, ciberseguridad e inglés técnico">Automation, cybersecurity and technical English</h3>
+          <p class="issuer">Cisco Networking Academy · Simplilearn SkillUp</p>
+          <ul class="certs">
+            <li><span data-es="English for IT 2 (nivel CEFR B2)">English for IT 2 (CEFR level B2)</span><span class="date">01/2026</span><a class="verify" href="https://www.credly.com/badges/ba00533d-6300-4f12-8712-e74a90aeda62" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>Introduction to Cybersecurity</span><span class="date">01/2026</span><a class="verify" href="https://www.credly.com/badges/fc79088e-9901-4a15-87ae-805a60cd7c68" target="_blank" rel="noopener" data-es="Verificar ↗">Verify ↗</a></li>
+            <li><span>n8n Course: No Code AI Agent Builder</span><span class="date">01/2026</span><span class="code" data-es="Código 9706214">Code 9706214</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <svg class="contact-mark" viewBox="0 0 460 420" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 92 352 C 20 330, 18 230, 96 196 C 170 164, 250 168, 322 112 L 346 96" stroke-dasharray="13 12"/>
+      <path d="M 344 300 C 396 296, 418 328, 392 352 C 378 366, 360 366, 346 360" stroke-dasharray="13 12"/>
+      <polygon points="92,242 215,152 338,242" style="fill: var(--bg)"/>
+      <rect x="132" y="176" width="166" height="160" rx="4" style="fill: var(--bg)"/>
+      <path d="M 156 206 H 206 M 220 206 H 274 M 156 228 H 236 M 250 228 H 274 M 156 250 H 196 M 210 250 H 274 M 156 272 H 226 M 240 272 H 274"/>
+      <path d="M 92 242 L 215 332 L 338 242 L 338 392 Q 338 398 332 398 L 98 398 Q 92 398 92 392 Z" style="fill: var(--bg)"/>
+      <path d="M 96 394 L 186 318 M 334 394 L 244 318"/>
+      <polygon points="436,42 320,80 364,96" style="fill: var(--bg)"/>
+      <polygon points="436,42 364,96 388,134" style="fill: var(--bg)"/>
+      <path d="M 364 96 L 372 118"/>
+    </svg>
+    <div class="wrap contact">
+      <div class="contact-text">
+        <p class="eyebrow" data-es="Contacto">Contact</p>
+        <h2 data-es="Hablemos">Let's talk</h2>
+        <p class="lead" data-es="Puedo incorporarme de inmediato, en modalidad remota, híbrida o presencial en CABA.">I can start immediately, working remotely, hybrid or on-site in Buenos Aires.</p>
+      </div>
+      <div class="channels">
+        <div class="channel">
+          <div class="channel-main">
+            <span class="label">Email</span>
+            <a id="email" href="mailto:daniell.german8@gmail.com">daniell.german8@gmail.com</a>
+          </div>
+          <button class="copy" id="copy-email" type="button">Copy</button>
+        </div>
+        <div class="channel">
+          <div class="channel-main">
+            <span class="label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/daniel-ochoa-p41" target="_blank" rel="noopener">linkedin.com/in/daniel-ochoa-p41</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Daniel Germán Ochoa</span>
+    <span><span data-es="Ilustración:">Illustration:</span> <a href="https://storyset.com/web" target="_blank" rel="noopener">Storyset</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // ---------- idioma (inglés por defecto) ----------
+  const UI = {
+    en: { copy: 'Copy', copied: 'Copied', selected: 'Selected' },
+    es: { copy: 'Copiar', copied: 'Copiado', selected: 'Seleccionado' },
+  };
+  let lang = 'en';
+  const texts = [...document.querySelectorAll('[data-es]')];
+  texts.forEach(el => { el.dataset.en = el.innerHTML; });
+  const alts = [...document.querySelectorAll('[data-es-alt]')];
+  alts.forEach(el => { el.dataset.enAlt = el.getAttribute('alt'); });
+  const copyBtn = document.getElementById('copy-email');
+
+  function setLang(next) {
+    lang = next === 'es' ? 'es' : 'en';
+    document.documentElement.lang = lang;
+    texts.forEach(el => { el.innerHTML = lang === 'es' ? el.dataset.es : el.dataset.en; });
+    alts.forEach(el => { el.setAttribute('alt', lang === 'es' ? el.dataset.esAlt : el.dataset.enAlt); });
+    copyBtn.textContent = UI[lang].copy;
+    document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  let saved = null;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved || 'en');
+
+  // ---------- copiar email ----------
+  const email = document.getElementById('email');
+  copyBtn.addEventListener('click', () => {
+    const reset = () => setTimeout(() => { copyBtn.textContent = UI[lang].copy; }, 1800);
+    const done = () => { copyBtn.textContent = UI[lang].copied; reset(); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(email);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      copyBtn.textContent = UI[lang].selected; reset();
+    };
+    try { navigator.clipboard.writeText(email.textContent.trim()).then(done, fallback); }
+    catch (e) { fallback(); }
+  });
+
+  // ---------- "Sobre mí": primero la foto, después el texto ----------
+  const about = document.getElementById('sobre-mi');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    about.classList.add('js-reveal');
+    let timer = 0;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          timer = setTimeout(() => { about.classList.add('revealed'); io.disconnect(); }, 450);
+        } else {
+          clearTimeout(timer);
+        }
+      });
+    }, { threshold: 0.35 });
+    io.observe(about);
+  }
+})();
+</script>
+</body>
+</html>
