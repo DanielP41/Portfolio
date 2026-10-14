@@ -172,6 +172,16 @@ section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--li
   .facts { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: 24px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 }
 
+/* ---------- cómo trabajo (valores) ---------- */
+.values { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(24px, 4vw, 56px); }
+.value { display: grid; gap: 18px; align-content: start; padding-top: 40px; border-top: 1px solid var(--line); min-width: 0; }
+.value svg { width: 44px; height: 44px; color: var(--ink); }
+.value h3 { font-size: clamp(1.45rem, 2.2vw, 1.75rem); font-weight: 400; letter-spacing: -0.02em; margin-top: 18px; }
+.value p { color: var(--muted); }
+@media (min-width: 961px) { .value h3 { min-height: 2.5em; } }
+@media (max-width: 960px) { .values { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .values { grid-template-columns: minmax(0, 1fr); } }
+
 /* ---------- projects ---------- */
 .projects { display: grid; }
 .project {
@@ -377,7 +387,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <div class="about-text">
           <p class="reveal" style="--i:2" data-es="Soy desarrollador backend y trabajo principalmente con <strong>Go (Fiber)</strong> y <strong>Python (FastAPI)</strong> sobre PostgreSQL, MongoDB y Redis, con Docker y CI/CD en GitHub Actions. Construí seis sistemas propios aplicando arquitectura limpia, colas asíncronas con reintentos, autenticación JWT/RBAC y testing automatizado.">I'm a backend developer working mainly with <strong>Go (Fiber)</strong> and <strong>Python (FastAPI)</strong> on PostgreSQL, MongoDB and Redis, with Docker and CI/CD on GitHub Actions. I've built six systems of my own applying clean architecture, asynchronous queues with retries, JWT/RBAC authentication and automated testing.</p>
           <p class="reveal" style="--i:3" data-es="Mi foco actual son las APIs de producción y la integración de modelos de lenguaje: RAG, servidores MCP y orquestación de varios proveedores de LLM.">My current focus is production APIs and language-model integration: RAG, MCP servers and orchestration across multiple LLM providers.</p>
-          <p class="reveal" style="--i:4" data-es="Pasé <strong>14 años en la Armada Argentina</strong> manteniendo y reparando sistemas de radar de navegación, y terminé como Encargado de Reparaciones Electrónicas al frente de un equipo técnico. De ahí traigo el diagnóstico sistemático bajo presión, el trabajo por guardias, la documentación rigurosa y la cultura de cero fallas. Lo que más me interesaba de esos sistemas era la lógica con la que procesan la información, y en 2022 empecé a dedicarme al software.">I spent <strong>14 years with the Argentine Navy</strong> maintaining and repairing navigation radar systems, finishing as Electronic Repairs Supervisor leading a technical team. From there I bring systematic troubleshooting under pressure, on-call discipline, rigorous documentation and a zero-failure mindset. What interested me most about those systems was the logic behind how they process information, and in 2022 I turned to software.</p>
+          <p class="reveal" style="--i:4" data-es="Pasé <strong>14 años en la Armada Argentina</strong> manteniendo y reparando sistemas de radar de navegación, y terminé como Encargado de Reparaciones Electrónicas al frente de un equipo técnico. De ahí traigo el diagnóstico sistemático bajo presión, el trabajo por guardias, la documentación rigurosa y el trabajo con un margen de error mínimo. Lo que más me interesaba de esos sistemas era la lógica con la que procesan la información, y en 2022 empecé a dedicarme al software.">I spent <strong>14 years with the Argentine Navy</strong> maintaining and repairing navigation radar systems, finishing as Electronic Repairs Supervisor leading a technical team. From there I bring systematic troubleshooting under pressure, on-call discipline, rigorous documentation and work with a minimal margin of error. What interested me most about those systems was the logic behind how they process information, and in 2022 I turned to software.</p>
         </div>
         <dl class="facts reveal" style="--i:5">
           <div><dt data-es="Ubicación">Location</dt><dd data-es="Ciudad Autónoma de Buenos Aires, Argentina">Autonomous City of Buenos Aires, Argentina</dd></div>
@@ -385,6 +395,37 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <div><dt data-es="Modalidad">Work mode</dt><dd data-es="Remota, híbrida o presencial en CABA">Remote, hybrid or on-site in Buenos Aires</dd></div>
           <div><dt data-es="Disponibilidad">Availability</dt><dd data-es="Inmediata">Immediate</dd></div>
         </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-trabajo">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-es="Cómo trabajo">How I work</p>
+        <h2 data-es="Mi disciplina y mi compromiso son mis mejores virtudes.">Discipline and commitment are my strongest virtues.</h2>
+      </div>
+      <div class="values">
+        <article class="value">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="13" r="6"/><path d="M13 42v-5a11 11 0 0 1 22 0v5"/><circle cx="9" cy="19" r="4"/><path d="M3 38v-2a7 7 0 0 1 9-6.7"/><circle cx="39" cy="19" r="4"/><path d="M45 38v-2a7 7 0 0 0-9-6.7"/></svg>
+          <h3 data-es="Liderazgo">Leadership</h3>
+          <p data-es="Para mí, liderar es empoderar a un equipo para que sea dueño de sus objetivos: darle autonomía y herramientas, y estar mano a mano a su lado.">To me, leading means empowering a team to own its goals: giving it autonomy and the right tools, and working side by side with it.</p>
+        </article>
+        <article class="value">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="2"/><path d="M24 3v6M24 39v6M3 24h6M39 24h6"/></svg>
+          <h3 data-es="Calma bajo presión">Calm under pressure</h3>
+          <p data-es="Me formé para mantener la calma en situaciones de alto riesgo y resolver paso a paso. Esa misma serenidad sirve frente a un bug crítico en producción.">I was trained to stay calm in high-risk situations and work the problem step by step. That same composure applies to a critical bug in production.</p>
+        </article>
+        <article class="value">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 12c-4-3-10-4-18-4v30c8 0 14 1 18 4 4-3 10-4 18-4V8c-8 0-14 1-18 4z"/><path d="M24 12v30"/></svg>
+          <h3 data-es="Aprendizaje continuo">Continuous learning</h3>
+          <p data-es="“La experiencia ajena es la más barata”: aprendo en foros, comunidades y meetups, y veo a la IA como una aliada que libera tiempo para lo que escala.">“Someone else's experience is the cheapest,” so I learn in forums, communities and meetups. I see AI as an ally that frees time for what scales.</p>
+        </article>
+        <article class="value">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 4 7 10v12c0 11 7 18.5 17 22 10-3.5 17-11 17-22V10z"/><path d="m16 24 6 6 11-12"/></svg>
+          <h3 data-es="Confiabilidad">Reliability</h3>
+          <p data-es="Llevo cada sistema de punta a punta y lo diseño pensando en las fallas: reintentos, health checks y tests desde el primer día, con la exigencia de lograr un trabajo eficiente que aprendí a bordo.">I take each system end to end and design for failure from day one: retries, health checks and tests, held to the standard of efficient work I learned on board.</p>
+        </article>
       </div>
     </div>
   </section>
