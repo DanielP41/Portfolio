@@ -80,6 +80,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .nav ul::-webkit-scrollbar { display: none; }
 .nav a.link { font-size: 0.875rem; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .2s; }
 .nav a.link:hover { color: var(--ink); }
+.nav a.link { position: relative; display: inline-block; padding-block: 6px; }
+.nav a.link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+.nav a.link.is-active { color: var(--ink); }
+.nav a.link.is-active::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) { .nav a.link::after { transition: none; } }
 .lang { display: flex; flex: none; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
 .lang button {
   font: 600 0.75rem/1 var(--sans); letter-spacing: 0.06em; color: var(--muted);
@@ -472,7 +477,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <h3>Engine API Workflow</h3>
             <p class="project-kind" data-es="Motor de automatización de flujos">Workflow automation engine</p>
             <figure class="project-media">
-              <video class="demo-video" controls muted loop playsinline preload="metadata" aria-label="Engine API Workflow demo">
+              <video class="demo-video" controls controlslist="nodownload" oncontextmenu="return false;" muted loop playsinline preload="metadata" aria-label="Engine API Workflow demo">
                 <source src="https://github.com/user-attachments/assets/fa0c9a6b-c726-471f-8e13-95c28bc22e0c#t=0.1" type="video/mp4">
               </video>
             </figure>
@@ -497,7 +502,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <h3>RAG Document API</h3>
             <p class="project-kind" data-es="Búsqueda documental asistida por LLM">LLM-assisted document search</p>
             <figure class="project-media">
-              <video class="demo-video" controls muted loop playsinline preload="metadata" aria-label="RAG Document API demo">
+              <video class="demo-video" controls controlslist="nodownload" oncontextmenu="return false;" muted loop playsinline preload="metadata" aria-label="RAG Document API demo">
                 <source src="https://github.com/user-attachments/assets/b13a9014-f245-452d-a9f7-9d7ba46b6be9#t=0.1" type="video/mp4">
               </video>
             </figure>
@@ -522,7 +527,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <h3>Dev Environment Snapshots</h3>
             <p class="project-kind" data-es="Servidor MCP">MCP server</p>
             <figure class="project-media">
-              <video class="demo-video" controls muted loop playsinline preload="metadata" aria-label="Dev Environment Snapshots demo">
+              <video class="demo-video" controls controlslist="nodownload" oncontextmenu="return false;" muted loop playsinline preload="metadata" aria-label="Dev Environment Snapshots demo">
                 <source src="https://github.com/user-attachments/assets/2b79d060-2a65-42c1-85da-c768e61f67ca#t=0.1" type="video/mp4">
               </video>
             </figure>
@@ -732,7 +737,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <span class="label">Email</span>
             <a id="email" href="mailto:daniell.german8@gmail.com">daniell.german8@gmail.com</a>
           </div>
-          <button class="copy" id="copy-email" type="button">Copy</button>
         </div>
         <div class="channel">
           <div class="channel-main">
@@ -764,14 +768,12 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   texts.forEach(el => { el.dataset.en = el.innerHTML; });
   const alts = [...document.querySelectorAll('[data-es-alt]')];
   alts.forEach(el => { el.dataset.enAlt = el.getAttribute('alt'); });
-  const copyBtn = document.getElementById('copy-email');
 
   function setLang(next) {
     lang = next === 'es' ? 'es' : 'en';
     document.documentElement.lang = lang;
     texts.forEach(el => { el.innerHTML = lang === 'es' ? el.dataset.es : el.dataset.en; });
     alts.forEach(el => { el.setAttribute('alt', lang === 'es' ? el.dataset.esAlt : el.dataset.enAlt); });
-    copyBtn.textContent = UI[lang].copy;
     document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     try { localStorage.setItem('lang', lang); } catch (e) {}
   }
@@ -780,19 +782,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   try { saved = localStorage.getItem('lang'); } catch (e) {}
   setLang(saved || 'en');
 
-  // ---------- copiar email ----------
-  const email = document.getElementById('email');
-  copyBtn.addEventListener('click', () => {
-    const reset = () => setTimeout(() => { copyBtn.textContent = UI[lang].copy; }, 1800);
-    const done = () => { copyBtn.textContent = UI[lang].copied; reset(); };
-    const fallback = () => {
-      const r = document.createRange(); r.selectNodeContents(email);
-      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-      copyBtn.textContent = UI[lang].selected; reset();
-    };
-    try { navigator.clipboard.writeText(email.textContent.trim()).then(done, fallback); }
-    catch (e) { fallback(); }
-  });
 
   // ---------- "Sobre mí": primero la foto, después el texto ----------
   const about = document.getElementById('sobre-mi');
@@ -832,6 +821,39 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     }, { threshold: 0.5 });
     vids.forEach(v => vio.observe(v));
   }
+  // ---------- nav: marca la sección visible ----------
+  const navLinks = [...document.querySelectorAll('.nav a.link')];
+  const navUl = document.querySelector('.nav ul');
+  const spy = [...document.querySelectorAll('main section[id], body > section[id], section[id]')]
+    .filter((x, i, arr) => arr.indexOf(x) === i)
+    .map(sec => {
+      const id = sec.id === 'como-trabajo' ? 'sobre-mi' : sec.id;
+      return { sec, link: navLinks.find(l => l.getAttribute('href') === '#' + id) || null };
+    });
+  let current = null;
+  function updateNav() {
+    const line = window.innerHeight * 0.35;
+    let active = null;
+    spy.forEach(({ sec, link }) => { if (sec.getBoundingClientRect().top <= line) active = link; });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = navLinks[navLinks.length - 1];
+    if (active === current) return;
+    current = active;
+    navLinks.forEach(l => {
+      const on = l === active;
+      l.classList.toggle('is-active', on);
+      if (on) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current');
+    });
+    if (active && navUl && navUl.scrollWidth > navUl.clientWidth) {
+      const li = active.parentElement;
+      navUl.scrollTo({ left: li.offsetLeft - (navUl.clientWidth - li.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+    }
+  }
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; updateNav(); }); }
+  }, { passive: true });
+  window.addEventListener('resize', updateNav);
+  updateNav();
 })();
 </script>
 </body>
